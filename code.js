@@ -1,10 +1,24 @@
+// helpers
+
+function fromSecondsToMillis(seconds) {
+  return seconds * 1000;
+}
+
+function fromMinutesToMillis(minutes) {
+  return fromSecondsToMillis(minutes * 60);
+}
+
+// states
+
 const states = {
   NONE: 0,
-  //FOCUS: 3000, // 3 seconds for debug
-  //PAUSE: 1000 // 1 second for debug
-  FOCUS: 5400000, // 90 minutes
-  PAUSE: 600000, // 10 minutes
+  // FOCUS: fromSecondsToMillis(3),
+  // PAUSE: fromSecondsToMillis(1)
+  FOCUS: fromMinutesToMillis(90),
+  PAUSE: fromMinutesToMillis(10),
 };
+
+// logic
 
 let state = states.NONE;
 let timer;
