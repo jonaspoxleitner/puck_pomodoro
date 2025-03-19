@@ -14,8 +14,8 @@ const states = {
   NONE: 0,
   // FOCUS: fromSecondsToMillis(3),
   // PAUSE: fromSecondsToMillis(1)
-  FOCUS: fromMinutesToMillis(90),
-  PAUSE: fromMinutesToMillis(10),
+  FOCUS: fromMinutesToMillis(25),
+  PAUSE: fromMinutesToMillis(5),
 };
 
 // logic
