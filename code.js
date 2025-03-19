@@ -1,3 +1,7 @@
+// constants
+
+const BUTTON_WATCH_OPTIONS = { edge: "rising", debounce: 50, repeat: true };
+
 // helpers
 
 function fromSecondsToMillis(seconds) {
@@ -11,11 +15,31 @@ function fromMinutesToMillis(minutes) {
 // states
 
 const states = {
-  NONE: 0,
-  // FOCUS: fromSecondsToMillis(3),
-  // PAUSE: fromSecondsToMillis(1)
-  FOCUS: fromMinutesToMillis(25),
-  PAUSE: fromMinutesToMillis(5),
+  NONE: {
+    duration: 0,
+    led: null,
+    nextState: "NONE",
+  },
+  // FOCUS: {
+  //   duration: fromSecondsToMillis(3),
+  //   led: LED3,
+  //   nextState: "PAUSE",
+  // },
+  // PAUSE: {
+  //   duration: fromSecondsToMillis(1),
+  //   led: LED2,
+  //   nextState: "FOCUS",
+  // },
+  FOCUS: {
+    duration: fromMinutesToMillis(25),
+    led: LED3,
+    nextState: "PAUSE",
+  },
+  PAUSE: {
+    duration: fromMinutesToMillis(5),
+    led: LED2,
+    nextState: "FOCUS",
+  },
 };
 
 // logic
@@ -25,30 +49,25 @@ let timer;
 
 setWatch(
   function () {
-    if (state === states.NONE) {
-      loop(state);
-    } else {
-      end();
-    }
+    if (state != states.NONE) return end();
+    state = states.FOCUS;
+    loop();
   },
   BTN,
-  { edge: "rising", debounce: 50, repeat: true }
+  BUTTON_WATCH_OPTIONS
 );
 
-function loop(timeout) {
-  var isFocus = state === states.FOCUS;
-  var led = isFocus ? LED3 : LED2;
-  led.set();
+function loop() {
+  state.led.set();
   timer = setTimeout(function () {
-    led.reset();
-    state = isFocus ? states.PAUSE : states.FOCUS;
-    loop(state);
-  }, timeout);
+    state.led.reset();
+    state = states[state.nextState];
+    loop();
+  }, state.duration);
 }
 
 function end() {
-  state = states.NONE;
   clearTimeout(timer);
-  LED2.reset();
-  LED3.reset();
+  state.led.reset();
+  state = states.NONE;
 }
